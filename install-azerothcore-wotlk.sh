@@ -125,7 +125,8 @@ function install(){
 	sudo systemctl enable --now ac-authserver.service
 	sudo systemctl enable --now ac-worldserver.service
 
-	echo "Starting Azerothcore services..."; sleep 1m;
+	# Wait 1 minute for Azerothcore to initialize the database and service
+	secs=60; while [ $secs -gt 0 ]; do echo -ne "Staring Azerothcore services in $secs seconds...\r"; sleep 1; : $((secs--)); done; echo -e "\nDone!"
 
 	# set Azerothcore realmlist IP and Name
 	echo "Set Azerothcore realmlist and realmname..."
