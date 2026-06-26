@@ -4,28 +4,29 @@
 function install(){
 	# install dependencies
 	echo "Install Azerothcore dependencies..."
-	sudo apt-get update && sudo apt-get install -y git cmake make gcc g++ clang libmysqlclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev mysql-server libboost-all-dev unzip screen
-	
+	sudo apt-get update && sudo apt-get install -y git cmake make gcc g++ clang libmysqlclient-dev \
+		libssl-dev libbz2-dev libreadline-dev libncurses-dev mysql-server libboost-all-dev unzip screen
+
 	# secure MySQL
 	echo "Secure MySQL server..."
 	sudo mysql_secure_installation --use-default
-	
+
 	# set default env variable
 	AC_CODE_DIR="/opt/azerothcore-wotlk"
 	DB_PASS="P@ssw0rd123"
 	INSTALL_USER=$(whoami)
-	
+
 	# create Azerothcore directory
 	sudo mkdir -p $AC_CODE_DIR/{data,logs,temp}
-	
+
 	# clone Azerothcore github directory
 	echo "Clone Azerothcore and compile..."
 	sudo git clone https://github.com/azerothcore/azerothcore-wotlk.git --branch master --single-branch $AC_CODE_DIR
-	
+
 	# start compiling azerothcore
 	cd $AC_CODE_DIR
 	sudo mkdir build && cd build
-	
+
 	sudo cmake ../ -DCMAKE_INSTALL_PREFIX=$AC_CODE_DIR \
 		-DCMAKE_C_COMPILER=/usr/bin/clang \
 		-DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
@@ -36,32 +37,37 @@ function install(){
 	#export BUILD_CORES=`nproc | awk '{print $1 - 1}'`
 	sudo make -j$(nproc)
 	sudo make install
-	
+
 	# copy and create Azerothcore config files
 	echo "Configure Azerothcore config files..."
 	sudo cp $AC_CODE_DIR/etc/authserver.conf.dist $AC_CODE_DIR/etc/authserver.conf
 	sudo cp $AC_CODE_DIR/etc/worldserver.conf.dist $AC_CODE_DIR/etc/worldserver.conf
-	
+
 	# configure worldserver.conf
-	sudo sed -i "s|^LoginDatabaseInfo.*|LoginDatabaseInfo = \"127.0.0.1;3306;acore;${DB_PASS};acore_auth\"|" $AC_CODE_DIR/etc/worldserver.conf
-	sudo sed -i "s|^WorldDatabaseInfo.*|WorldDatabaseInfo = \"127.0.0.1;3306;acore;${DB_PASS};acore_world\"|" $AC_CODE_DIR/etc/worldserver.conf
-	sudo sed -i "s|^CharacterDatabaseInfo.*|CharacterDatabaseInfo = \"127.0.0.1;3306;acore;${DB_PASS};acore_characters\"|" $AC_CODE_DIR/etc/worldserver.conf
+	sudo sed -i "s|^LoginDatabaseInfo.*|LoginDatabaseInfo = \"127.0.0.1;3306;acore;${DB_PASS};acore_auth\"|" \
+		$AC_CODE_DIR/etc/worldserver.conf
+	sudo sed -i "s|^WorldDatabaseInfo.*|WorldDatabaseInfo = \"127.0.0.1;3306;acore;${DB_PASS};acore_world\"|" \
+		$AC_CODE_DIR/etc/worldserver.conf
+	sudo sed -i "s|^CharacterDatabaseInfo.*|CharacterDatabaseInfo = \"127.0.0.1;3306;acore;${DB_PASS};acore_characters\"|" \
+		$AC_CODE_DIR/etc/worldserver.conf
 	sudo sed -i "s|^DataDir.*|DataDir = \"$AC_CODE_DIR/data\"|" $AC_CODE_DIR/etc/worldserver.conf
 	sudo sed -i "s|^LogsDir.*|LogsDir = \"$AC_CODE_DIR/logs\"|" $AC_CODE_DIR/etc/worldserver.conf
 	sudo sed -i "s|^TempDir.*|TempDir = \"$AC_CODE_DIR/temp\"|" $AC_CODE_DIR/etc/worldserver.conf
-	
+
 	# configure authserver.conf
-	sudo sed -i "s|^LoginDatabaseInfo.*|LoginDatabaseInfo = \"127.0.0.1;3306;acore;${DB_PASS};acore_auth\"|" $AC_CODE_DIR/etc/authserver.conf
+	sudo sed -i "s|^LoginDatabaseInfo.*|LoginDatabaseInfo = \"127.0.0.1;3306;acore;${DB_PASS};acore_auth\"|" \
+		$AC_CODE_DIR/etc/authserver.conf
 	sudo sed -i "s|^LogsDir.*|LogsDir = \"$AC_CODE_DIR/logs\"|" $AC_CODE_DIR/etc/authserver.conf
 	sudo sed -i "s|^TempDir.*|TempDir = \"$AC_CODE_DIR/temp\"|" $AC_CODE_DIR/etc/authserver.conf
-	
+
 	# download client data
 	echo "Download latest client data..."
-	LATEST_CLIENT=$(curl -s https://api.github.com/repos/wowgaming/client-data/releases/latest 2>/dev/null | grep '"tag_name"' | cut -d'"' -f4 || echo "unknown")
+	LATEST_CLIENT=$(curl -s https://api.github.com/repos/wowgaming/client-data/releases/latest 2>/dev/null | \
+		grep '"tag_name"' | cut -d'"' -f4 || echo "unknown")
 	wget -q --show-progress https://github.com/wowgaming/client-data/releases/download/${LATEST_CLIENT}/Data.zip -P /tmp
 	sudo unzip /tmp/Data.zip -d $AC_CODE_DIR/data
 	echo "$LATEST_CLIENT" > $AC_CODE_DIR/data/.version
-	
+
 	# Azerothcore database setup
 	echo "Setup Azerothcore database..."
 	sudo mysql -e "DROP USER IF EXISTS 'acore'@'localhost';"
@@ -75,10 +81,10 @@ function install(){
 	sudo mysql -e "GRANT ALL PRIVILEGES ON acore_auth.* TO 'acore'@'localhost';"
 	sudo mysql -e "GRANT ALL PRIVILEGES ON acore_playerbots.* TO 'acore'@'localhost';"
 	sudo mysql -e "FLUSH PRIVILEGES;"
-	
+
 	# Create systemd file for Azerothcore service
 	echo "Create Azerothcore systemd service files..."
-	cat <<-EOF | tee $AC_CODE_DIR/ac-authserver.service > /dev/null
+	cat <<-EOF | sudo tee /etc/systemd/system/ac-authserver.service > /dev/null
 		[Unit]
 		Description=AzerothCore Authserver
 		After=network.target
@@ -96,7 +102,7 @@ function install(){
 		WantedBy=multi-user.target
 	EOF
 
-	cat <<-EOF | tee $AC_CODE_DIR/ac-worldserver.service > /dev/null
+	cat <<-EOF | sudo tee /etc/systemd/system/ac-worldserver.service > /dev/null
 		[Unit]
 		Description=AzerothCore Worldserver
 		After=network.target
@@ -113,7 +119,7 @@ function install(){
 		[Install]
 		WantedBy=multi-user.target
 	EOF
-	
+
 	echo "Enable and start Azerothcore services..."
 	sudo systemctl daemon-reload
 	sudo systemctl enable --now ac-authserver.service
@@ -140,7 +146,7 @@ if [[ -r /etc/os-release ]]; then
 	CODENAME=$VERSION_CODENAME
 	#CODENAME=$(cat /etc/os-release | grep _CODENAME | cut -d = -f 2)
 	#echo $CODENAME
-	if [[ $CODENAME == "`noble" ]]; then
+	if [[ $CODENAME == "noble" ]]; then
 		install
 	else
 		echo "Not running Ubuntu 24.04 LTS distribution. Exiting..."
