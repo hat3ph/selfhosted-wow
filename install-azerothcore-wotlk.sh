@@ -136,6 +136,10 @@ function install(){
 	#echo "Restart Azerothcore service..."
 	#sudo systemctl restart ac-authserver.service
 	#sudo systemctl restart ac-worldserver.service
+
+	# remove build directory
+	echo "Delete build directory..."
+	sudo rm -r $AC_CODE_DIR/build
 }
 
 # installation menu selection
