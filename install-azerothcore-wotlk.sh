@@ -27,7 +27,7 @@ function install(){
 	cd $AC_CODE_DIR
 	sudo mkdir build && cd build
 
-	sudo cmake ../ -DCMAKE_INSTALL_PREFIX=$AC_CODE_DIR \
+	sudo cmake ../ -DCMAKE_INSTALL_PREFIX=$AC_CODE_DIR/env/dist/ \
 		-DCMAKE_C_COMPILER=/usr/bin/clang \
 		-DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
 		-DWITH_WARNINGS=1 \
@@ -52,13 +52,13 @@ function install(){
 		$AC_CODE_DIR/etc/worldserver.conf
 	sudo sed -i "s|^DataDir.*|DataDir = \"$AC_CODE_DIR/data\"|" $AC_CODE_DIR/etc/worldserver.conf
 	sudo sed -i "s|^LogsDir.*|LogsDir = \"$AC_CODE_DIR/logs\"|" $AC_CODE_DIR/etc/worldserver.conf
-	sudo sed -i "s|^TempDir.*|TempDir = \"$AC_CODE_DIR/temp\"|" $AC_CODE_DIR/etc/worldserver.conf
+	#sudo sed -i "s|^TempDir.*|TempDir = \"$AC_CODE_DIR/temp\"|" $AC_CODE_DIR/etc/worldserver.conf
 
 	# configure authserver.conf
 	sudo sed -i "s|^LoginDatabaseInfo.*|LoginDatabaseInfo = \"127.0.0.1;3306;acore;${DB_PASS};acore_auth\"|" \
 		$AC_CODE_DIR/etc/authserver.conf
 	sudo sed -i "s|^LogsDir.*|LogsDir = \"$AC_CODE_DIR/logs\"|" $AC_CODE_DIR/etc/authserver.conf
-	sudo sed -i "s|^TempDir.*|TempDir = \"$AC_CODE_DIR/temp\"|" $AC_CODE_DIR/etc/authserver.conf
+	#sudo sed -i "s|^TempDir.*|TempDir = \"$AC_CODE_DIR/temp\"|" $AC_CODE_DIR/etc/authserver.conf
 
 	# download client data
 	echo "Download latest client data..."
@@ -75,11 +75,9 @@ function install(){
 	sudo mysql -e "CREATE DATABASE IF NOT EXISTS acore_world;"
 	sudo mysql -e "CREATE DATABASE IF NOT EXISTS acore_characters;"
 	sudo mysql -e "CREATE DATABASE IF NOT EXISTS acore_auth;"
-	sudo mysql -e "CREATE DATABASE IF NOT EXISTS acore_playerbots;"
 	sudo mysql -e "GRANT ALL PRIVILEGES ON acore_world.* TO 'acore'@'localhost';"
 	sudo mysql -e "GRANT ALL PRIVILEGES ON acore_characters.* TO 'acore'@'localhost';"
 	sudo mysql -e "GRANT ALL PRIVILEGES ON acore_auth.* TO 'acore'@'localhost';"
-	sudo mysql -e "GRANT ALL PRIVILEGES ON acore_playerbots.* TO 'acore'@'localhost';"
 	sudo mysql -e "FLUSH PRIVILEGES;"
 
 	# Create systemd file for Azerothcore service
