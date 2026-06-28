@@ -25,6 +25,14 @@ function install(){
 	sudo chown -R ${INSTALL_USER}:${INSTALL_USER} $AC_CODE_DIR
 	mkdir -p $AC_CODE_DIR/data
 
+	# download client data
+	echo "Download latest client data..."
+	LATEST_CLIENT=$(curl -s https://api.github.com/repos/wowgaming/client-data/releases/latest 2>/dev/null | \
+		grep '"tag_name"' | cut -d'"' -f4 || echo "unknown")
+	wget -q --show-progress https://github.com/wowgaming/client-data/releases/download/${LATEST_CLIENT}/Data.zip -P /tmp
+	unzip /tmp/Data.zip -d $AC_CODE_DIR/data
+	echo "$LATEST_CLIENT" > $AC_CODE_DIR/data/.version
+
 	# start compiling azerothcore
 	cd $AC_CODE_DIR
 	mkdir -p build && cd build
@@ -61,14 +69,6 @@ function install(){
 		$AC_CODE_DIR/env/dist/etc/authserver.conf
 	sed -i "s|^LogsDir.*|LogsDir = \"$AC_CODE_DIR/logs\"|" $AC_CODE_DIR/env/dist/etc/authserver.conf
 	#sed -i "s|^TempDir.*|TempDir = \"$AC_CODE_DIR/temp\"|" $AC_CODE_DIR/env/dist/etc/authserver.conf
-
-	# download client data
-	echo "Download latest client data..."
-	LATEST_CLIENT=$(curl -s https://api.github.com/repos/wowgaming/client-data/releases/latest 2>/dev/null | \
-		grep '"tag_name"' | cut -d'"' -f4 || echo "unknown")
-	wget -q --show-progress https://github.com/wowgaming/client-data/releases/download/${LATEST_CLIENT}/Data.zip -P /tmp
-	unzip /tmp/Data.zip -d $AC_CODE_DIR/data
-	echo "$LATEST_CLIENT" > $AC_CODE_DIR/data/.version
 
 	# Azerothcore database setup
 	echo "Setup Azerothcore database..."
