@@ -121,8 +121,8 @@ function install(){
 		Restart=always
 		RestartSec=1
 		User=${INSTALL_USER}
-		WorkingDirectory=$AC_CODE_DIR
-		ExecStart=$AC_CODE_DIR/acore.sh run-authserver
+		WorkingDirectory=${AC_CODE_DIR}
+		ExecStart=${AC_CODE_DIR}/acore.sh run-authserver
 
 		[Install]
 		WantedBy=multi-user.target
@@ -139,8 +139,8 @@ function install(){
 		Restart=always
 		RestartSec=1
 		User=${INSTALL_USER}
-		WorkingDirectory=$AC_CODE_DIR
-		ExecStart=/bin/screen -S worldserver -D -m $AC_CODE_DIR/acore.sh run-worldserver
+		WorkingDirectory=${AC_CODE_DIR}
+		ExecStart=/bin/screen -S worldserver -D -m ${AC_CODE_DIR}/acore.sh run-worldserver
 
 		[Install]
 		WantedBy=multi-user.target
@@ -173,7 +173,7 @@ function install(){
 	echo "###################"
 	echo "Cleanup old data..."
 	echo "###################"
-	sudo rm -r $AC_CODE_DIR/build
+	sudo rm -r ${AC_CODE_DIR}/build
 	sudo rm /tmp/Data.zip
 	echo "Done removing old data."
 }
