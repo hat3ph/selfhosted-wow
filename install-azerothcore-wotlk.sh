@@ -26,16 +26,11 @@ function install(){
 	echo "##################################"
 	echo "Cloning Azerothcore github repo..."
 	echo "##################################"
-	sudo git clone https://github.com/azerothcore/azerothcore-wotlk.git --branch master --single-branch ${AC_CODE_DIR}
-
-	# change folder permission
-	echo -e "\n"
-	echo "########################"
-	echo "Set folder permission..."
-	echo "########################"
+	sudo mkdir -p ${AC_CODE_DIR}
 	sudo chown -R ${INSTALL_USER}:${INSTALL_USER} ${AC_CODE_DIR}
+	git clone https://github.com/azerothcore/azerothcore-wotlk.git --branch master --single-branch ${AC_CODE_DIR}
+	# create extra folders
 	mkdir -p ${AC_CODE_DIR}/{data,logs,temp}
-	echo "Done change ${AC_CODE_DIR} folder permission to ${INSTALL_USER}."
 
 	# download client data
 	echo -e "\n"
