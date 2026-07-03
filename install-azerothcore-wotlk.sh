@@ -20,6 +20,8 @@ function install(){
 	AC_CODE_DIR="/opt/azerothcore-wotlk"
 	DB_PASS="P@ssw0rd123"
 	INSTALL_USER=$(whoami)
+	realmlist_ip=$(hostname -I | awk '{print $1}')
+	realmlist_name="AzerothCore"
 
 	# clone Azerothcore github directory
 	echo -e "\n"
@@ -162,8 +164,6 @@ function install(){
 	echo "##########################################"
 	echo "Set Azerothcore realmlist and realmname..."
 	echo "##########################################"
-	realmlist_ip=$(hostname -I | awk '{print $1}')
-	realmlist_name="AzerothCore"
 	sudo mysql -e "UPDATE acore_auth.realmlist SET address = '${realmlist_ip}' WHERE id = 1;"
 	sudo mysql -e "UPDATE acore_auth.name SET name = '${realmlist_name}' WHERE id = 1;"
 	echo "Done configure Realmlist IP and Hostname."
