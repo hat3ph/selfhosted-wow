@@ -240,7 +240,7 @@ if [[ -r /etc/os-release ]]; then
 	CODENAME=$VERSION_CODENAME
 	#CODENAME=$(cat /etc/os-release | grep _CODENAME | cut -d = -f 2)
 	#echo $CODENAME
-	if [[ $CODENAME == "noble" ]]; then
+	if [[ $CODENAME == "noble" || $CODENAME == "resolute" ]]; then
 		if [[ -z $1 || $1 != "classic" && $1 != "tbc" && $1 != "wotlk" ]]; then
 			echo "No or wrong arguments provided."
 			echo "Usage: $0 {classic|tbc|wotlk}"
@@ -248,7 +248,7 @@ if [[ -r /etc/os-release ]]; then
 			install "$1"
 		fi
 	else
-		echo "Not running Ubuntu 24.04 LTS distribution. Exiting..."
+		echo "Not running Ubuntu 24.04/26.04 LTS distribution. Exiting..."
 		exit;
 	fi
 else
