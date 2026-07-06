@@ -23,7 +23,7 @@ function update(){
                 echo "Updating Azerothcore git directory..."
                 echo "#####################################"
                 cd ${AC_CODE_DIR}
-                git pull
+                git pull origin master
 
                 echo -e "\n"
                 echo "#################################"
