@@ -165,7 +165,7 @@ function install(){
 	echo "Set Azerothcore realmlist and realmname..."
 	echo "##########################################"
 	sudo mysql -e "UPDATE acore_auth.realmlist SET address = '${realmlist_ip}' WHERE id = 1;"
-	sudo mysql -e "UPDATE acore_auth.name SET name = '${realmlist_name}' WHERE id = 1;"
+	sudo mysql -e "UPDATE acore_auth.realmlist SET name = '${realmlist_name}' WHERE id = 1;"
 	echo "Done configure Realmlist IP and Hostname."
 
 	# remove build directory
