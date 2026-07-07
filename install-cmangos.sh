@@ -151,7 +151,7 @@ function install(){
 	bash InstallFullDB.sh -Config
 	sed -i "s|^MYSQL_USERNAME.*|MYSQL_USERNAME=\"${DB_USER}\"|" ${CMGS_CODE_DIR}/mangos-${1}/${1}-db/InstallFullDB.config
 	sed -i "s|^MYSQL_PASSWORD.*|MYSQL_PASSWORD=\"${DB_PASS}\"|" ${CMGS_CODE_DIR}/mangos-${1}/${1}-db/InstallFullDB.config
-	ed -i "s|^CORE_PATH.*|CORE_PATH=\"${CMGS_CODE_DIR}/mangos-classic\"|" ${CMGS_CODE_DIR}/mangos-${1}/${1}-db/InstallFullDB.config
+	sed -i "s|^CORE_PATH.*|CORE_PATH=\"${CMGS_CODE_DIR}/mangos-classic\"|" ${CMGS_CODE_DIR}/mangos-${1}/${1}-db/InstallFullDB.config
 	if [[ ${PLAYERBOTS} == "ON" ]]; then
 		sed -i "s|^PLAYERBOTS_DB.*|PLAYERBOTS_DB=\"${PLAYERBOTS}\"|" ${CMGS_CODE_DIR}/mangos-${1}/${1}-db/InstallFullDB.config
 	fi
