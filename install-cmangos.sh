@@ -158,7 +158,7 @@ function install(){
 	if [[ ${AHBOT} == "ON" ]]; then
 		sed -i "s|^AHBOT.*|AHBOT=\"${AHBOT}\"|" ${CMGS_CODE_DIR}/mangos-${1}/${1}-db/InstallFullDB.config
 	fi
-	yes DeleteAll | bash InstallFullDB.sh -InstallAll mangos ${DB_PASS}
+	yes DeleteAll | bash InstallFullDB.sh -InstallAll ${DB_USER} ${DB_PASS}
 	echo "Done configure CMaNGOS database."
 
 	# Create systemd file for CMaNGOS service
@@ -229,7 +229,7 @@ function install(){
 	echo "Cleanup old data..."
 	echo "###################"
 	sudo rm -r ${CMGS_CODE_DIR}/build
-	#sudo rm /tmp/data.zip
+	sudo rm /tmp/data.zip
 	echo "Done removing old data."
 }
 
