@@ -91,11 +91,14 @@ function update(){
 		AHBOT="ON"
 	fi
 
+	echo -e
 	echo "################################"
 	echo "#...Stopping CMaNGOS serices...#"
 	echo "################################"
 	sudo systemctl stop mangosd.service
+	echo "mangosd.service stopped!"
 	sudo systemctl stop realmd.service
+	echo "realmd.service stopped!"
 
 	echo -e
 	echo "###########################"
@@ -112,11 +115,12 @@ function update(){
 	mysqldump --defaults-extra-file=${CMGS_CODE_DIR}/backup/.db_cred.cnf ${MANGOSD_DB} > ${CMGS_CODE_DIR}/backup/mangos-${1}-${MANGOSD_DB}-$(date +%Y_%m_%d_%H_%M_%S).sql
 	mysqldump --defaults-extra-file=${CMGS_CODE_DIR}/backup/.db_cred.cnf ${CHARS_DB} > ${CMGS_CODE_DIR}/backup/mangos-${1}-${CHARS_DB}-$(date +%Y_%m_%d_%H_%M_%S).sql
 	mysqldump --defaults-extra-file=${CMGS_CODE_DIR}/backup/.db_cred.cnf ${LOGS_DB} > ${CMGS_CODE_DIR}/backup/mangos-${1}-${LOGS_DB}-$(date +%Y_%m_%d_%H_%M_%S).sql
+	cd ${CMGS_CODE_DIR}/backup
 	tar -czvf mangos-${1}-sqlbak-$(date +%Y_%m_%d_%H_%M_%S).tar.gz *.sql
 	rm ${CMGS_CODE_DIR}/backup/*.sql
 	rm ${CMGS_CODE_DIR}/backup/.db_cred.cnf
 	echo "Done backup SQL DB to ${CMGS_CODE_DIR}/backup."
-	
+
 	# backup current CMaNGOS folder
 	cp -r ${CMGS_CODE_DIR} $HOME/cmangos-$(date +%Y_%m_%d_%H)
 	echo "Done backup CMaNGOS data to $HOME/cmangos-$(date +%Y_%m_%d_%H)"
@@ -215,7 +219,7 @@ function update(){
 	sudo systemctl start mangosd.service
 
 	# Wait 1 minute for CMaNGOS to initialize the database and service
-	secs=60; while [ $secs -gt 0 ]; do echo -ne "Staring CMaNGOS services in $secs seconds...\r"; sleep 1; : $((secs--)); done; echo -e "\nDone!"
+	secs=60; while [ $secs -gt 0 ]; do echo -ne "Staring CMaNGOS realmd and mangosd services in $secs seconds...\r"; sleep 1; : $((secs--)); done; echo -e "\nDone!"
 
 	# remove build directory
 	echo -e
