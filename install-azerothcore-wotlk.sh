@@ -3,11 +3,11 @@
 # credit: https://gitea.com/Eldesan/Debian-Trixie-Azerothcore-PlayerBots-llm-Nvidia-And-Slim-version
 
 cat << "EOF"
-    _                       _   _      ____               
+    _                       _   _      ____ 
    / \    _______ _ __ ___ | |_| |__  / ___|___  _ __ ___ 
   / _ \  |_  / _ \ '__/ _ \| __| '_ \| |   / _ \| '__/ _ \
  / ___ \  / /  __/ | | (_) | |_| | | | |__| (_) | | |  __/
-/_/   \_\/___\___|_|  \___/ \__|_| |_|\____\___/|_|  \___| 
+/_/   \_\/___\___|_|  \___/ \__|_| |_|\____\___/|_|  \___|
 https://www.azerothcore.org
 EOF
 
@@ -29,12 +29,14 @@ function install(){
 
 	# set default env variable
 	AC_CODE_DIR="/opt/azerothcore-wotlk"
+	DB_USER="acore"
 	DB_PASS="P@ssw0rd123"
 	INSTALL_USER=$(whoami)
 	realmlist_ip=$(hostname -I | awk '{print $1}')
 	realmlist_name="AzerothCore"
 
 	if [[ -d ${AC_CODE_DIR} ]]; then
+		echo -e
 		echo "Folder ${AC_CODE_DIR} already exist. Aborting installation!"
 		exit;
 	else
@@ -87,11 +89,11 @@ function install(){
 		cp ${AC_CODE_DIR}/env/dist/etc/worldserver.conf.dist ${AC_CODE_DIR}/env/dist/etc/worldserver.conf
 
 		# configure worldserver.conf
-		sed -i "s|^LoginDatabaseInfo.*|LoginDatabaseInfo = \"127.0.0.1;3306;acore;${DB_PASS};acore_auth\"|" \
+		sed -i "s|^LoginDatabaseInfo.*|LoginDatabaseInfo = \"127.0.0.1;3306;${DB_USER};${DB_PASS};acore_auth\"|" \
 			${AC_CODE_DIR}/env/dist/etc/worldserver.conf
-		sed -i "s|^WorldDatabaseInfo.*|WorldDatabaseInfo = \"127.0.0.1;3306;acore;${DB_PASS};acore_world\"|" \
+		sed -i "s|^WorldDatabaseInfo.*|WorldDatabaseInfo = \"127.0.0.1;3306;${DB_USER};${DB_PASS};acore_world\"|" \
 			${AC_CODE_DIR}/env/dist/etc/worldserver.conf
-		sed -i "s|^CharacterDatabaseInfo.*|CharacterDatabaseInfo = \"127.0.0.1;3306;acore;${DB_PASS};acore_characters\"|" \
+		sed -i "s|^CharacterDatabaseInfo.*|CharacterDatabaseInfo = \"127.0.0.1;3306;${DB_USER};${DB_PASS};acore_characters\"|" \
 			${AC_CODE_DIR}/env/dist/etc/worldserver.conf
 		sed -i "s|^DataDir.*|DataDir = \"${AC_CODE_DIR}/data\"|" ${AC_CODE_DIR}/env/dist/etc/worldserver.conf
 		sed -i "s|^LogsDir.*|LogsDir = \"${AC_CODE_DIR}/logs\"|" ${AC_CODE_DIR}/env/dist/etc/worldserver.conf
@@ -99,7 +101,7 @@ function install(){
 		echo "Done configure ${AC_CODE_DIR}/env/dist/etc/worldserver.conf."
 
 		# configure authserver.conf
-		sed -i "s|^LoginDatabaseInfo.*|LoginDatabaseInfo = \"127.0.0.1;3306;acore;${DB_PASS};acore_auth\"|" \
+		sed -i "s|^LoginDatabaseInfo.*|LoginDatabaseInfo = \"127.0.0.1;3306;${DB_USER};${DB_PASS};acore_auth\"|" \
 			${AC_CODE_DIR}/env/dist/etc/authserver.conf
 		sed -i "s|^LogsDir.*|LogsDir = \"${AC_CODE_DIR}/logs\"|" ${AC_CODE_DIR}/env/dist/etc/authserver.conf
 		sed -i "s|^TempDir.*|TempDir = \"${AC_CODE_DIR}/temp\"|" ${AC_CODE_DIR}/env/dist/etc/authserver.conf
@@ -110,14 +112,14 @@ function install(){
 		echo "##################################"
 		echo "#...Setup Azerothcore database...#"
 		echo "##################################"
-		sudo mysql -e "DROP USER IF EXISTS 'acore'@'localhost';"
-		sudo mysql -e "CREATE USER IF NOT EXISTS 'acore'@'localhost' IDENTIFIED BY '${DB_PASS}';"
+		sudo mysql -e "DROP USER IF EXISTS '${DB_USER}'@'localhost';"
+		sudo mysql -e "CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';"
 		sudo mysql -e "CREATE DATABASE IF NOT EXISTS acore_world;"
 		sudo mysql -e "CREATE DATABASE IF NOT EXISTS acore_characters;"
 		sudo mysql -e "CREATE DATABASE IF NOT EXISTS acore_auth;"
-		sudo mysql -e "GRANT ALL PRIVILEGES ON acore_world.* TO 'acore'@'localhost';"
-		sudo mysql -e "GRANT ALL PRIVILEGES ON acore_characters.* TO 'acore'@'localhost';"
-		sudo mysql -e "GRANT ALL PRIVILEGES ON acore_auth.* TO 'acore'@'localhost';"
+		sudo mysql -e "GRANT ALL PRIVILEGES ON acore_world.* TO '${DB_USER}'@'localhost';"
+		sudo mysql -e "GRANT ALL PRIVILEGES ON acore_characters.* TO '${DB_USER}'@'localhost';"
+		sudo mysql -e "GRANT ALL PRIVILEGES ON acore_auth.* TO '${DB_USER}'@'localhost';"
 		sudo mysql -e "FLUSH PRIVILEGES;"
 		echo "Done configure Azerothcore database."
 
