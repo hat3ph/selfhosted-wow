@@ -6,6 +6,16 @@
 # https://github.com/cmangos/issues/wiki/Installation-Instructions
 # https://github.com/celguar/spp-classics-cmangos/releases
 
+cat << "EOF"
+  _____     __  __       _   _  _____  ____   _____
+ / ____|   |  \/  |     | \ | |/ ____|/ __ \ / ____|
+| |        | \  / |     |  \| | |  __  |  | | (___
+| |ontinued| |\/| | __ _| . ` | | |_ | |  | |\___ \
+| |____    | |  | |/ _` | |\  | |__| | |__| |____) |
+ \_____|   |_|  |_| (_| |_| \_|\_____|\____/ \____/
+ http://cmangos.net\__,_|     Doing emulation right!
+EOF
+
 function check_update(){
 	# set default env variable
 	CMGS_CODE_DIR="/opt/cmangos"
