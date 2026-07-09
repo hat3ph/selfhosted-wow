@@ -38,9 +38,9 @@ function check_update(){
 
 	if [[ -d ${CMGS_CODE_DIR}/mangos-${1} ]]; then
 		# Check update status for CMaNGOS files
-		echo "####################################"
-		echo "...Checking CMaNGOS update status..."
-		echo "####################################"
+		echo "######################################"
+		echo "#...Checking CMaNGOS update status...#"
+		echo "######################################"
 		cd ${CMGS_CODE_DIR}/mangos-${1}
 		git fetch origin
 		if [[ $(git rev-list HEAD...origin/master --count) == 0 ]]; then
@@ -61,15 +61,15 @@ function check_update(){
 
 		# summary of the updates
 		echo -e
-		echo "############################"
-		echo "...CMaNGOS Update Summary..."
-		echo "############################"
+		echo "##############################"
+		echo "#...CMaNGOS Update Summary...#"
+		echo "##############################"
 		echo -e "CMGS Update Available : ${CMGS_UPDATES}"
 		echo -e "DB Update Available : ${DB_UPDATES}"
 		while true; do
-		read -p "Do you want to proceed with above settings? (y/n) " yn
+		read -p "Do you want to proceed with above summary? (y/n) " yn
 			case $yn in
-				[yY] ) echo ok, we will proceed; update ${1}; echo "Remember to reboot system after the installation!";
+				[yY] ) echo ok, we will proceed; update ${1};
 					break;;
 				[nN] ) echo exiting...;
 					exit;;
@@ -91,16 +91,16 @@ function update(){
 		AHBOT="ON"
 	fi
 
-	echo "##############################"
-	echo "...Stopping CMaNGOS serices..."
-	echo "##############################"
+	echo "################################"
+	echo "#...Stopping CMaNGOS serices...#"
+	echo "################################"
 	sudo systemctl stop mangosd.service
 	sudo systemctl stop realmd.service
 
 	echo -e
-	echo "#########################"
-	echo "...Backup CMaNGOS Data..."
-	echo "#########################"
+	echo "###########################"
+	echo "#...Backup CMaNGOS Data...#"
+	echo "###########################"
 	mkdir -p ${CMGS_CODE_DIR}/backup
 	cat <<-EOF | tee ${CMGS_CODE_DIR}/backup/.db_cred.cnf > /dev/null
 		[mysqldump]
@@ -123,9 +123,9 @@ function update(){
 
 	# updating CMaNGOS github directory
 	echo -e
-	echo "###########################"
-	echo "...Updating CMaNGOS data..."
-	echo "###########################"
+	echo "#############################"
+	echo "#...Updating CMaNGOS data...#"
+	echo "#############################"
 	cd ${CMGS_CODE_DIR}/mangos-${1}
 	git fetch origin
 	echo "Updating ${CMGS_CODE_DIR}/mangos-${1}."
@@ -139,9 +139,9 @@ function update(){
 
 	# start re-compiling CMaNGOS if there is update 
 	echo -e
-	echo "######################################"
-	echo "...Re-compiling CMaNGOS source code..."
-	echo "######################################"
+	echo "########################################"
+	echo "#...Re-compiling CMaNGOS source code...#"
+	echo "########################################"
 	mkdir -p ${CMGS_CODE_DIR}/build && cd ${CMGS_CODE_DIR}/build
 
 	cmake ../mangos-${1} -DCMAKE_INSTALL_PREFIX=${CMGS_CODE_DIR}/run \
@@ -155,9 +155,9 @@ function update(){
 
 	# copy and create CMaNGOS config files
 	echo -e
-	echo "####################################"
-	echo "...Configure CMaNGOS config files..."
-	echo "####################################"
+	echo "######################################"
+	echo "#...Configure CMaNGOS config files...#"
+	echo "######################################"
 	cp ${CMGS_CODE_DIR}/run/etc/mangosd.conf.dist ${CMGS_CODE_DIR}/run/etc/mangosd.conf
 	cp ${CMGS_CODE_DIR}/run/etc/realmd.conf.dist ${CMGS_CODE_DIR}/run/etc/realmd.conf
 	cp ${CMGS_CODE_DIR}/run/etc/anticheat.conf.dist ${CMGS_CODE_DIR}/run/etc/anticheat.conf
@@ -186,9 +186,9 @@ function update(){
 
 	# Updating CMaNGOS database
 	echo -e
-	echo "###############################"
-	echo "...Updating CMaNGOS database..."
-	echo "###############################"
+	echo "#################################"
+	echo "#...Updating CMaNGOS database...#"
+	echo "#################################"
 	cd ${CMGS_CODE_DIR}/mangos-${1}/${1}-db
 	# generate database config if missing
 	if [[ ! -f ${CMGS_CODE_DIR}/mangos-${1}/${1}-db/InstallFullDB.config ]]; then
@@ -208,9 +208,9 @@ function update(){
 	echo "Done updating CMaNGOS database."
 
 	echo -e
-	echo "##############################"
-	echo "Restarting CMaNGOS services..."
-	echo "##############################"
+	echo "###################################"
+	echo "#...Restarting CMaNGOS services...#"
+	echo "###################################"
 	sudo systemctl start realmd.service
 	sudo systemctl start mangosd.service
 
@@ -219,9 +219,9 @@ function update(){
 
 	# remove build directory
 	echo -e
-	echo "######################"
-	echo "...Cleanup old data..."
-	echo "######################"
+	echo "########################"
+	echo "#...Cleanup old data...#"
+	echo "########################"
 	sudo rm -r ${CMGS_CODE_DIR}/build
 	echo "Done removing build data."
 }
