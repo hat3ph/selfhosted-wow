@@ -20,6 +20,7 @@ function check_update(){
 
 	if [[ -d ${AC_CODE_DIR} ]]; then
         # Check update status for Azerothcore files
+		echo -e
 		echo "##########################################"
 		echo "#...Checking Azerothcore update status...#"
 		echo "##########################################"
@@ -62,6 +63,30 @@ function update(){
 	sudo systemctl stop ac-authserver
 	sudo systemctl stop ac-worldserver
 	echo "Azerothcore services stopped!"
+	
+	echo -e
+	echo "###############################"
+	echo "#...Backup Azerothcore Data...#"
+	echo "###############################"
+	mkdir -p ${AC_CODE_DIR}/backup
+	cat <<-EOF | tee ${AC_CODE_DIR}/backup/.db_cred.cnf > /dev/null
+		[mysqldump]
+		user=${DB_USER}
+		password=${DB_PASS}
+	EOF
+	chmod 600 ${AC_CODE_DIR}/backup/.db_cred.cnf
+	mysqldump --defaults-extra-file=${AC_CODE_DIR}/backup/.db_cred.cnf acore_world > ${AC_CODE_DIR}/backup/acore_world-$(date +%Y_%m_%d_%H_%M_%S).sql
+	mysqldump --defaults-extra-file=${AC_CODE_DIR}/backup/.db_cred.cnf acore_characters > ${AC_CODE_DIR}/backup/acore_characters-$(date +%Y_%m_%d_%H_%M_%S).sql
+	mysqldump --defaults-extra-file=${AC_CODE_DIR}/backup/.db_cred.cnf acore_auth > ${AC_CODE_DIR}/acore_auth-$(date +%Y_%m_%d_%H_%M_%S).sql
+	cd ${AC_CODE_DIR}/backup
+	tar -czvf azerothcore-sqlbak-$(date +%Y_%m_%d_%H_%M_%S).tar.gz *.sql
+	rm ${AC_CODE_DIR}/backup/*.sql
+	rm ${AC_CODE_DIR}/backup/.db_cred.cnf
+	echo "Done backup SQL DB to ${AC_CODE_DIR}/backup."
+
+	# backup current Azerothcore folder
+	cp -r ${AC_CODE_DIR} $HOME/azerothcore-wotlk-$(date +%Y_%m_%d_%H)
+	echo "Done backup CMaNGOS data to $HOME/azerothcore-wotlk-$(date +%Y_%m_%d_%H)"
 
 	echo -e
 	echo "##########################################"
@@ -146,7 +171,7 @@ if [[ -r /etc/os-release ]]; then
         #CODENAME=$(cat /etc/os-release | grep _CODENAME | cut -d = -f 2)
         #echo $CODENAME
         if [[ $CODENAME == "noble" ]]; then
-                update
+                check_update
         else
                 echo "Not running Ubuntu 24.04 LTS distribution. Exiting..."
                 exit;
