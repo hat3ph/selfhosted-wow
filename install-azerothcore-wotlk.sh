@@ -15,7 +15,7 @@ function install(){
 	# install dependencies
 	echo -e
 	echo "########################################"
-	echo "#...Install Azerothcore dependencies...#"
+	echo "#...Install AzerothCore dependencies...#"
 	echo "########################################"
 	sudo apt-get update && sudo apt-get install -y git cmake make gcc g++ clang libmysqlclient-dev \
 		libssl-dev libbz2-dev libreadline-dev libncurses-dev mysql-server libboost-all-dev unzip screen
@@ -33,17 +33,17 @@ function install(){
 	DB_PASS="P@ssw0rd123"
 	INSTALL_USER=$(whoami)
 	REALMLIST_IP=$(hostname -I | awk '{print $1}')
-	REALMLIST_NAME="AzerothCore"
+	REALMLIST_NAME="AzerothCore WotLK"
 
 	if [[ -d ${AC_CODE_DIR} ]]; then
 		echo -e
 		echo "Folder ${AC_CODE_DIR} already exist. Aborting installation!"
 		exit;
 	else
-		# clone Azerothcore github directory
+		# clone AzerothCore github directory
 		echo -e
 		echo "#######################################"
-		echo "#...Cloning Azerothcore github repo...#"
+		echo "#...Cloning AzerothCore github repo...#"
 		echo "#######################################"
 		sudo mkdir -p ${AC_CODE_DIR}
 		sudo chown -R ${INSTALL_USER}:${INSTALL_USER} ${AC_CODE_DIR}
@@ -63,10 +63,10 @@ function install(){
 		echo "${LATEST_CLIENT}" > ${AC_CODE_DIR}/data/.version
 		echo "Done extract client data to ${AC_CODE_DIR}/data."
 
-		# start compiling azerothcore
+		# start compiling AzerothCore
 		echo -e
 		echo "#############################"
-		echo "#...Compiling Azerothcore...#"
+		echo "#...Compiling AzerothCore...#"
 		echo "#############################"
 		mkdir -p ${AC_CODE_DIR}/build && cd ${AC_CODE_DIR}/build
 
@@ -80,10 +80,10 @@ function install(){
 		make -j$(nproc)
 		make install
 
-		# copy and create Azerothcore config files
+		# copy and create AzerothCore config files
 		echo -e
 		echo "##########################################"
-		echo "#...Configure Azerothcore config files...#"
+		echo "#...Configure AzerothCore config files...#"
 		echo "##########################################"
 		cp ${AC_CODE_DIR}/env/dist/etc/authserver.conf.dist ${AC_CODE_DIR}/env/dist/etc/authserver.conf
 		cp ${AC_CODE_DIR}/env/dist/etc/worldserver.conf.dist ${AC_CODE_DIR}/env/dist/etc/worldserver.conf
@@ -110,7 +110,7 @@ function install(){
 		# Azerothcore database setup
 		echo -e
 		echo "##################################"
-		echo "#...Setup Azerothcore database...#"
+		echo "#...Setup AzerothCore database...#"
 		echo "##################################"
 		sudo mysql -e "DROP USER IF EXISTS '${DB_USER}'@'localhost';"
 		sudo mysql -e "CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';"
@@ -121,12 +121,12 @@ function install(){
 		sudo mysql -e "GRANT ALL PRIVILEGES ON acore_characters.* TO '${DB_USER}'@'localhost';"
 		sudo mysql -e "GRANT ALL PRIVILEGES ON acore_auth.* TO '${DB_USER}'@'localhost';"
 		sudo mysql -e "FLUSH PRIVILEGES;"
-		echo "Done configure Azerothcore database."
+		echo "Done configure AzerothCore database."
 
-		# Create systemd file for Azerothcore service
+		# Create systemd file for AzerothCore service
 		echo -e
 		echo "################################################"
-		echo "#...Create Azerothcore systemd service files...#"
+		echo "#...Create AzerothCore systemd service files...#"
 		echo "################################################"
 		cat <<-EOF | sudo tee /etc/systemd/system/ac-authserver.service > /dev/null
 			[Unit]
@@ -167,13 +167,13 @@ function install(){
 		sudo systemctl enable --now ac-authserver.service
 		sudo systemctl enable --now ac-worldserver.service
 
-		# Wait 1 minute for Azerothcore to initialize the database and service
-		secs=60; while [ $secs -gt 0 ]; do echo -ne "Staring Azerothcore auth and world services in $secs seconds...\r"; sleep 1; : $((secs--)); done; echo -e "\nDone!"
+		# Wait 1 minute for AzerothCore to initialize the database and service
+		secs=60; while [ $secs -gt 0 ]; do echo -ne "Staring AzerothCore auth and world services in $secs seconds...\r"; sleep 1; : $((secs--)); done; echo -e "\nDone!"
 
 		# set Azerothcore realmlist IP and Name
 		echo -e
 		echo "###############################################"
-		echo "#...Set Azerothcore realmlist and realmname...#"
+		echo "#...Set AzerothCore realmlist and realmname...#"
 		echo "###############################################"
 		sudo mysql -e "UPDATE acore_auth.realmlist SET address = '${REALMLIST_IP}' WHERE id = 1;"
 		sudo mysql -e "UPDATE acore_auth.realmlist SET name = '${REALMLIST_NAME}' WHERE id = 1;"
@@ -190,7 +190,7 @@ function install(){
 	fi
 }
 
-# installation menu selection
+# check running OS
 if [[ -r /etc/os-release ]]; then
 	. /etc/os-release
 	ID=$ID
