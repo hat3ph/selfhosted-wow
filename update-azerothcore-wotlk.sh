@@ -19,10 +19,10 @@ function check_update(){
 	AC_UPDATE="YES"
 
 	if [[ -d ${AC_CODE_DIR} ]]; then
-        # Check update status for Azerothcore files
+        # Check update status for AzerothCore files
 		echo -e
 		echo "##########################################"
-		echo "#...Checking Azerothcore update status...#"
+		echo "#...Checking AzerothCore update status...#"
 		echo "##########################################"
 		cd ${AC_CODE_DIR}
 		git fetch origin
@@ -36,9 +36,9 @@ function check_update(){
 		# summary of the updates
 		echo -e
 		echo "##################################"
-		echo "#...Azerothcore Update Summary...#"
+		echo "#...AzerothCore Update Summary...#"
 		echo "##################################"
-		echo -e "Azerothcore Update Available : ${AC_UPDATE}"
+		echo -e "AzerothCore Update Available : ${AC_UPDATE}"
 		while true; do
 		read -p "Do you want to proceed with above summary? (y/n) " yn
 			case $yn in
@@ -58,15 +58,15 @@ function check_update(){
 function update(){
 	echo -e
 	echo "####################################"
-	echo "#...Disable Azerothcore services...#"
+	echo "#...Disable AzerothCore services...#"
 	echo "####################################"
 	sudo systemctl stop ac-authserver
 	sudo systemctl stop ac-worldserver
-	echo "Azerothcore services stopped!"
+	echo "AzerothCore services stopped!"
 
 	echo -e
 	echo "###############################"
-	echo "#...Backup Azerothcore Data...#"
+	echo "#...Backup AzerothCore Data...#"
 	echo "###############################"
 	mkdir -p ${AC_CODE_DIR}/backup
 	sudo mysqldump acore_world > ${AC_CODE_DIR}/backup/acore_world-$(date +%Y_%m_%d_%H_%M_%S).sql
@@ -79,11 +79,11 @@ function update(){
 
 	# backup current Azerothcore folder
 	cp -r ${AC_CODE_DIR} $HOME/azerothcore-wotlk-$(date +%Y_%m_%d_%H)
-	echo "Done backup CMaNGOS data to $HOME/azerothcore-wotlk-$(date +%Y_%m_%d_%H)"
+	echo "Done backup AzerothCore data to $HOME/azerothcore-wotlk-$(date +%Y_%m_%d_%H)"
 
 	echo -e
 	echo "##########################################"
-	echo "#...Updating Azerothcore git directory...#"
+	echo "#...Updating AzerothCore git directory...#"
 	echo "##########################################"
 	cd ${AC_CODE_DIR}
 	git pull origin master
@@ -106,7 +106,7 @@ function update(){
 
 	echo -e
 	echo "################################"
-	echo "#...Re-compiling Azerothcore...#"
+	echo "#...Re-compiling AzerothCore...#"
 	echo "################################"
 	mkdir -p ${AC_CODE_DIR}/build && cd ${AC_CODE_DIR}/build
 	cmake ../ -DCMAKE_INSTALL_PREFIX=${AC_CODE_DIR}/env/dist/ \
@@ -118,12 +118,12 @@ function update(){
 		-DMODULES=static
 	make -j$(nproc)
 	make install
-	echo "Done compling latest Azerothcore source code."
+	echo "Done compling latest AzerothCore source code."
 
 	# copy and create Azerothcore config files
 	echo -e
 	echo "##########################################"
-	echo "#...Configure Azerothcore config files...#"
+	echo "#...Configure AzerothCore config files...#"
 	echo "##########################################"
 	cp ${AC_CODE_DIR}/env/dist/etc/authserver.conf.dist ${AC_CODE_DIR}/env/dist/etc/authserver.conf
 	cp ${AC_CODE_DIR}/env/dist/etc/worldserver.conf.dist ${AC_CODE_DIR}/env/dist/etc/worldserver.conf
@@ -149,14 +149,14 @@ function update(){
 
 	echo -e
 	echo "###############################"
-	echo "Start Azerothcore services..."
+	echo "Start AzerothCore services..."
 	echo "###############################"
 	sudo systemctl start ac-authserver
 	sudo systemctl start ac-worldserver
-	echo "Done started Azerothcore service."
+	echo "Done started AzerothCore service."
 }
 
-# installation menu selection
+# check runing OS
 if [[ -r /etc/os-release ]]; then
         . /etc/os-release
         ID=$ID
