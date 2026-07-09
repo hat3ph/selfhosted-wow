@@ -23,7 +23,6 @@ function check_update(){
 	DB_PASS="P@ssw0rd123"
 	CMGS_UPDATE="YES"
 	DB_UPDATE="YES"
-	INSTALL_USER=$(whoami)
 	PLAYERBOTS="OFF" #Turn player bot on or off
 	AHBOT="OFF" #Turn auction house bot on or off
 
@@ -55,7 +54,7 @@ function check_update(){
 		git fetch origin
 		if [[ $(git rev-list HEAD...origin/master --count) == 0 ]]; then
 			echo "Folder ${CMGS_CODE_DIR}/mangos-${1} already updated."
-			CMGS_UPDATES="NO"
+			CMGS_UPDATE="NO"
 		else
 			echo "Updates available for ${CMGS_CODE_DIR}/mangos-${1}. Run update-cmangos.sh script to update the codes."
 		fi
@@ -64,7 +63,7 @@ function check_update(){
 		git fetch origin
 		if [[ $(git rev-list HEAD...origin/master --count) == 0 ]]; then
 			echo "Folder ${CMGS_CODE_DIR}/mangos-${1} already updated."
-			DB_UPDATES="NO"
+			DB_UPDATE="NO"
 		else
 			echo "Updates available for ${CMGS_CODE_DIR}/mangos-${1}. Run update-cmangos.sh script to update the codes."
 		fi
@@ -74,8 +73,8 @@ function check_update(){
 		echo "##############################"
 		echo "#...CMaNGOS Update Summary...#"
 		echo "##############################"
-		echo -e "CMGS Update Available : ${CMGS_UPDATES}"
-		echo -e "DB Update Available : ${DB_UPDATES}"
+		echo -e "CMGS Update Available : ${CMGS_UPDATE}"
+		echo -e "DB Update Available : ${DB_UPDATE}"
 		while true; do
 		read -p "Do you want to proceed with above summary? (y/n) " yn
 			case $yn in
