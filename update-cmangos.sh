@@ -150,7 +150,7 @@ function update(){
 	echo "Updating ${CMGS_CODE_DIR}/mangos-${1}/${1}-db."
 	git pull origin master
 
-	# start re-compiling CMaNGOS if there is update 
+	# start re-compiling CMaNGOS if there is update
 	echo -e
 	echo "########################################"
 	echo "#...Re-compiling CMaNGOS source code...#"
