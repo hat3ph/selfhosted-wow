@@ -216,12 +216,6 @@ function install(){
 			[Install]
 			WantedBy=multi-user.target
 		EOF
-		echo "Done create systemd service files."
-
-		echo -e
-		echo "#########################################"
-		echo "#...Enable and start CMaNGOS services...#"
-		echo "#########################################"
 		sudo systemctl daemon-reload
 		sudo systemctl enable --now realmd.service
 		sudo systemctl enable --now mangosd.service
@@ -236,7 +230,7 @@ function install(){
 		echo "###########################################"
 		sudo mysql -e "UPDATE ${REALMD_DB}.realmlist SET address = '${REALMLIST_IP}' WHERE id = 1;"
 		sudo mysql -e "UPDATE ${REALMD_DB}.realmlist SET name = '${REALMLIST_NAME}' WHERE id = 1;"
-		echo "Done configure Realmlist IP and Hostname."
+		echo "Done configure ${REALMLIST_IP} and ${REALMLIST_NAME} as Realmlist IP and Hostname."
 
 		# remove build directory
 		echo -e
