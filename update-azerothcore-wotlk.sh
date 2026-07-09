@@ -3,18 +3,18 @@
 # credit: https://gitea.com/Eldesan/Debian-Trixie-Azerothcore-PlayerBots-llm-Nvidia-And-Slim-version
 
 cat << "EOF"
-    _                       _   _      ____               
-   / \    _______ _ __ ___ | |_| |__  / ___|___  _ __ ___ 
+    _                       _   _      ____
+   / \    _______ _ __ ___ | |_| |__  / ___|___  _ __ ___
   / _ \  |_  / _ \ '__/ _ \| __| '_ \| |   / _ \| '__/ _ \
  / ___ \  / /  __/ | | (_) | |_| | | | |__| (_) | | |  __/
-/_/   \_\/___\___|_|  \___/ \__|_| |_|\____\___/|_|  \___| 
+/_/   \_\/___\___|_|  \___/ \__|_| |_|\____\___/|_|  \___|
 https://www.azerothcore.org
 EOF
 
 function check_update(){
     # set default variable
 	AC_CODE_DIR="/opt/azerothcore-wotlk"
-    DB_USER="acore"
+	DB_USER="acore"
 	DB_PASS="P@ssw0rd123"
 	AC_UPDATE="YES"
 
@@ -31,7 +31,7 @@ function check_update(){
 		else
 			echo "Updates available for ${AC_CODE_DIR}."
 		fi
-		
+
 		# summary of the updates
 		echo -e
 		echo "##################################"
