@@ -32,8 +32,8 @@ function install(){
 	DB_USER="acore"
 	DB_PASS="P@ssw0rd123"
 	INSTALL_USER=$(whoami)
-	realmlist_ip=$(hostname -I | awk '{print $1}')
-	realmlist_name="AzerothCore"
+	REALMLIST_IP=$(hostname -I | awk '{print $1}')
+	REALMLIST_NAME="AzerothCore"
 
 	if [[ -d ${AC_CODE_DIR} ]]; then
 		echo -e
@@ -163,11 +163,6 @@ function install(){
 			[Install]
 			WantedBy=multi-user.target
 		EOF
-		echo "Done create systemd service files."
-
-		echo "#############################################"
-		echo "#...Enable and start Azerothcore services...#"
-		echo "#############################################"
 		sudo systemctl daemon-reload
 		sudo systemctl enable --now ac-authserver.service
 		sudo systemctl enable --now ac-worldserver.service
@@ -180,9 +175,9 @@ function install(){
 		echo "###############################################"
 		echo "#...Set Azerothcore realmlist and realmname...#"
 		echo "###############################################"
-		sudo mysql -e "UPDATE acore_auth.realmlist SET address = '${realmlist_ip}' WHERE id = 1;"
-		sudo mysql -e "UPDATE acore_auth.realmlist SET name = '${realmlist_name}' WHERE id = 1;"
-		echo "Done configure Realmlist IP and Hostname."
+		sudo mysql -e "UPDATE acore_auth.realmlist SET address = '${REALMLIST_IP}' WHERE id = 1;"
+		sudo mysql -e "UPDATE acore_auth.realmlist SET name = '${REALMLIST_NAME}' WHERE id = 1;"
+		echo "Done configure ${REALMLIST_IP} and ${REALMLIST_NAME} as Realmlist IP and Hostname ."
 
 		# remove build directory
 		echo -e
