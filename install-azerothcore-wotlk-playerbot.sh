@@ -121,8 +121,8 @@ function install(){
 		sed -i "s|^PlayerbotsDatabaseInfo.*|PlayerbotsDatabaseInfo = \"127.0.0.1;3306;${DB_USER};${DB_PASS};acore_playerbots\"|" \
 			${AC_CODE_DIR}/env/dist/etc/modules/playerbots.conf
 		# reduce bots count for low resource system
-		sed -i "s|^AiPlayerbot.MinRandomBots.*|AiPlayerbot.MinRandomBots = \"50\"|" ${AC_CODE_DIR}/env/dist/etc/modules/playerbots.conf
-		sed -i "s|^AiPlayerbot.MaxRandomBots.*|AiPlayerbot.MaxRandomBots = \"50\"|" ${AC_CODE_DIR}/env/dist/etc/modules/playerbots.conf
+		sed -i "s|^AiPlayerbot.MinRandomBots =.*|AiPlayerbot.MinRandomBots = 50|" ${AC_CODE_DIR}/env/dist/etc/modules/playerbots.conf
+		sed -i "s|^AiPlayerbot.MaxRandomBots =.*|AiPlayerbot.MaxRandomBots = 50|" ${AC_CODE_DIR}/env/dist/etc/modules/playerbots.conf
 
 		# configure mod_ahbot.conf
 		sed -i "s|^AuctionHouseBot.GUIDs.*|AuctionHouseBot.GUIDs = 1|" ${AC_CODE_DIR}/env/dist/etc/modules/mod_ahbot.conf
