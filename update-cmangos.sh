@@ -176,8 +176,8 @@ function update(){
 	cp ${CMGS_CODE_DIR}/run/etc/anticheat.conf.dist ${CMGS_CODE_DIR}/run/etc/anticheat.conf
 	if [[ ${PLAYERBOTS} == "ON" ]]; then
         # reduce AI playbot count to reduce server load
-		sed -i "s|^AiPlayerbot.MinRandomBots.*|AiPlayerbot.MinRandomBots = \"50\"|" ${CMGS_CODE_DIR}/run/etc/aiplayerbot.conf
-		sed -i "s|^AiPlayerbot.MaxRandomBots.*|AiPlayerbot.MaxRandomBots = \"50\"|" ${CMGS_CODE_DIR}/run/etc/aiplayerbot.conf
+		sed -i "s|^AiPlayerbot.MinRandomBots =.*|AiPlayerbot.MinRandomBots = 50|" ${CMGS_CODE_DIR}/run/etc/aiplayerbot.conf
+		sed -i "s|^AiPlayerbot.MaxRandomBots =.*|AiPlayerbot.MaxRandomBots = 50|" ${CMGS_CODE_DIR}/run/etc/aiplayerbot.conf
 	fi
 	if [[ ${AHBOT} == "ON" ]]; then
 		cp ${CMGS_CODE_DIR}/run/etc/ahbot.conf.dist ${CMGS_CODE_DIR}/run/etc/ahbot.conf
