@@ -56,8 +56,8 @@ function install(){
 		mkdir -p ${AC_CODE_DIR}/{data,logs,temp}
 
 		# install Playerbot and AHbot modules
-		git clone https://github.com/mod-playerbots/mod-playerbots.git --branch=master ${AC_CODE_DIR}/modules
-		git clone https://github.com/NathanHandley/mod-ah-bot-plus.git --branch=master ${AC_CODE_DIR}/modules
+		git clone https://github.com/mod-playerbots/mod-playerbots.git --branch=master ${AC_CODE_DIR}/modules/mod-playerbots
+		git clone https://github.com/NathanHandley/mod-ah-bot-plus.git --branch=master ${AC_CODE_DIR}/modules/mod-ah-bot-plus
 
 		# download client data
 		echo -e
