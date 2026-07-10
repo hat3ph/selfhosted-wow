@@ -128,8 +128,8 @@ function install(){
 		if [[ ${PLAYERBOTS} == "ON" ]]; then
 			cp ${CMGS_CODE_DIR}/run/etc/aiplayerbot.conf.dist ${CMGS_CODE_DIR}/run/etc/aiplayerbot.conf
 			# reduce AI playbot count to reduce server load
-			sed -i "s|^AiPlayerbot.MinRandomBots.*|AiPlayerbot.MinRandomBots = \"50\"|" ${CMGS_CODE_DIR}/run/etc/aiplayerbot.conf
-			sed -i "s|^AiPlayerbot.MaxRandomBots.*|AiPlayerbot.MaxRandomBots = \"50\"|" ${CMGS_CODE_DIR}/run/etc/aiplayerbot.conf
+			sed -i "s|^AiPlayerbot.MinRandomBots =.*|AiPlayerbot.MinRandomBots = 50|" ${CMGS_CODE_DIR}/run/etc/aiplayerbot.conf
+			sed -i "s|^AiPlayerbot.MaxRandomBots =.*|AiPlayerbot.MaxRandomBots = 50|" ${CMGS_CODE_DIR}/run/etc/aiplayerbot.conf
 		fi
 		if [[ ${AHBOT} == "ON" ]]; then
 			cp ${CMGS_CODE_DIR}/run/etc/ahbot.conf.dist ${CMGS_CODE_DIR}/run/etc/ahbot.conf
