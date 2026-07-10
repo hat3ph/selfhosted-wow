@@ -63,6 +63,13 @@ function install(){
 		echo "${LATEST_CLIENT}" > ${AC_CODE_DIR}/data/.version
 		echo "Done extract client data to ${AC_CODE_DIR}/data."
 
+		if [[ $CODENAME == "resolute" ]]; then
+			# fix compile error missing libstdc++ library on Ubuntu 26.04 LTS
+			sudo apt-get install -y libstdc++-16-dev
+			# fix jemalloc compile error (https://github.com/389ds/389-ds-base/issues/7178)
+			sed -i 's|std::__throw_bad_alloc();|throw std::bad_alloc();|' ${AC_CODE_DIR}/deps/jemalloc/src/jemalloc_cpp.cpp
+		fi
+
 		# start compiling AzerothCore
 		echo -e
 		echo "#############################"
@@ -197,7 +204,7 @@ if [[ -r /etc/os-release ]]; then
 	CODENAME=$VERSION_CODENAME
 	#CODENAME=$(cat /etc/os-release | grep _CODENAME | cut -d = -f 2)
 	#echo $CODENAME
-	if [[ $CODENAME == "noble" ]]; then
+	if [[ $CODENAME == "noble" || $CODENAME == "resolute" ]]; then
 		install
 	else
 		echo "Not running Ubuntu 24.04 LTS distribution. Exiting..."
