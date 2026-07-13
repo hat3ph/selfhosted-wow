@@ -62,7 +62,7 @@ function update(){
 	echo "####################################"
 	sudo systemctl stop ac-authserver
 	sudo systemctl stop ac-worldserver
-	echo "AzerothCore services stopped!"
+	secs=60; while [ $secs -gt 0 ]; do echo -ne "Stopping AzerothCore Auth and World services in $secs seconds...\r"; sleep 1; : $((secs--)); done; echo -e "\nDone!"
 
 	echo -e
 	echo "###############################"
