@@ -186,12 +186,12 @@ function install(){
 			[Install]
 			WantedBy=multi-user.target
 		EOF
+		# Wait 1 minute for AzerothCore to initialize the database and service
 		sudo systemctl daemon-reload
 		sudo systemctl enable --now acbot-authserver.service
+		secs=60; while [ $secs -gt 0 ]; do echo -ne "Staring AzerothCore Auth services in $secs seconds...\r"; sleep 1; : $((secs--)); done; echo -e "\nDone!"
 		sudo systemctl enable --now acbot-worldserver.service
-
-		# Wait 1 minute for AzerothCore to initialize the database and service
-		secs=60; while [ $secs -gt 0 ]; do echo -ne "Staring AzerothCore auth and world services in $secs seconds...\r"; sleep 1; : $((secs--)); done; echo -e "\nDone!"
+		secs=60; while [ $secs -gt 0 ]; do echo -ne "Staring AzerothCore World services in $secs seconds...\r"; sleep 1; : $((secs--)); done; echo -e "\nDone!"
 
 		# set AzerothCore realmlist IP and Name
 		echo -e
