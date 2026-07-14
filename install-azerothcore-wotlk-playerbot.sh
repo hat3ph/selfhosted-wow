@@ -193,14 +193,19 @@ function install(){
 		sudo systemctl enable --now acbot-worldserver.service
 		secs=60; while [ $secs -gt 0 ]; do echo -ne "Staring AzerothCore World services in $secs seconds...\r"; sleep 1; : $((secs--)); done; echo -e "\nDone!"
 
-		# set AzerothCore realmlist IP and Name
-		echo -e
-		echo "###############################################"
-		echo "#...Set AzerothCore realmlist and realmname...#"
-		echo "###############################################"
-		sudo mysql -e "UPDATE acore_auth.realmlist SET address = '${REALMLIST_IP}' WHERE id = 1;"
-		sudo mysql -e "UPDATE acore_auth.realmlist SET name = '${REALMLIST_NAME}' WHERE id = 1;"
-		echo "Done configure ${REALMLIST_IP} and ${REALMLIST_NAME} as Realmlist IP and Hostname ."
+		# set Azerothcore realmlist IP and Name when service fully first initialled.
+		while true; do
+    		if [[ $(cat ${AC_CODE_DIR}/logs/Server.log | grep ready) ]]; then
+				echo -e
+				echo "###############################################"
+				echo "#...Set AzerothCore realmlist and realmname...#"
+				echo "###############################################"
+				sudo mysql -e "UPDATE acore_auth.realmlist SET address = '${REALMLIST_IP}' WHERE id = 1;"
+				sudo mysql -e "UPDATE acore_auth.realmlist SET name = '${REALMLIST_NAME}' WHERE id = 1;"
+				echo "Done configure ${REALMLIST_IP} and ${REALMLIST_NAME} as Realmlist IP and Hostname ."
+				break
+			fi
+		done
 
 		# remove build directory
 		echo -e
