@@ -18,11 +18,20 @@ EOF
 function install(){
 	# install dependencies
 	echo -e
-	echo "########################################"
-	echo "#...Install AzerothCore dependencies...#"
-	echo "########################################"
-	sudo apt-get update && sudo apt-get install -y git cmake make gcc g++ clang libmysqlclient-dev \
-		libssl-dev libbz2-dev libreadline-dev libncurses-dev mysql-server libboost-all-dev unzip screen
+	echo "###########################################"
+	echo "#...Installing AzerothCore dependencies...#"
+	echo "###########################################"
+	sudo apt-get update && sudo apt-get install -y git cmake make gcc g++ clang libssl-dev libbz2-dev \
+		libreadline-dev libncurses-dev libboost-all-dev unzip screen
+	# install mysql server
+	if [[ $CODENAME == "trixie" ]]; then
+		MYSQL_APT_CONFIG_VERSION="0.8.36-1"
+		wget -P /tmp https://dev.mysql.com/get/mysql-apt-config_${MYSQL_APT_CONFIG_VERSION}_all.deb
+		sudo DEBIAN_FRONTEND="noninteractive" dpkg -i /tmp/mysql-apt-config_${MYSQL_APT_CONFIG_VERSION}_all.deb
+		sudo DEBIAN_FRONTEND="noninteractive" apt-get install -y mysql-server libmysqlclient-dev
+	else
+		sudo apt-get install -y mysql-server libmysqlclient-dev
+	fi
 
 	# secure MySQL
 	echo -e
