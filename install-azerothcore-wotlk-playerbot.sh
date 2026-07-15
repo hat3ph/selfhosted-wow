@@ -29,9 +29,9 @@ function install(){
 		MYSQL_APT_CONFIG_VERSION="0.8.36-1"
 		wget -P /tmp https://dev.mysql.com/get/mysql-apt-config_${MYSQL_APT_CONFIG_VERSION}_all.deb
 		sudo DEBIAN_FRONTEND="noninteractive" dpkg -i /tmp/mysql-apt-config_${MYSQL_APT_CONFIG_VERSION}_all.deb
-		sudo DEBIAN_FRONTEND="noninteractive" apt-get install -y mysql-server libmysqlclient-dev
+		sudo apt-get update && sudo DEBIAN_FRONTEND="noninteractive" apt-get install -y mysql-server libmysqlclient-dev
 	else
-		sudo apt-get update && sudo apt-get install -y mysql-server libmysqlclient-dev
+		sudo apt-get install -y mysql-server libmysqlclient-dev
 	fi
 
 	# secure MySQL
