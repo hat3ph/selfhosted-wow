@@ -25,6 +25,7 @@ function install(){
 		libreadline-dev libncurses-dev libboost-all-dev unzip screen
 	# install mysql server
 	if [[ $CODENAME == "trixie" ]]; then
+		sudo apt-get install -y gnupg
 		MYSQL_APT_CONFIG_VERSION="0.8.36-1"
 		wget -P /tmp https://dev.mysql.com/get/mysql-apt-config_${MYSQL_APT_CONFIG_VERSION}_all.deb
 		sudo DEBIAN_FRONTEND="noninteractive" dpkg -i /tmp/mysql-apt-config_${MYSQL_APT_CONFIG_VERSION}_all.deb
