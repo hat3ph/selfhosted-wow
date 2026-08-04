@@ -11,7 +11,15 @@ cat << "EOF"
 https://www.azerothcore.org
 EOF
 
-function install(){
+function install
+	# set default env variable
+	AC_CODE_DIR="/opt/azerothcore-wotlk"
+	DB_USER="acore"
+	DB_PASS="P@ssw0rd123"
+	INSTALL_USER=$(whoami)
+	REALMLIST_IP=$(hostname -I | awk '{print $1}')
+	REALMLIST_NAME="AzerothCore WotLK"
+
 	# install dependencies
 	echo -e
 	echo "###########################################"
@@ -35,15 +43,8 @@ function install(){
 	echo "###########################"
 	echo "#...Secure MySQL server...#"
 	echo "###########################"
-	sudo mysql_secure_installation --use-default
-
-	# set default env variable
-	AC_CODE_DIR="/opt/azerothcore-wotlk"
-	DB_USER="acore"
-	DB_PASS="P@ssw0rd123"
-	INSTALL_USER=$(whoami)
-	REALMLIST_IP=$(hostname -I | awk '{print $1}')
-	REALMLIST_NAME="AzerothCore WotLK"
+	sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_PASS}';"
+	sudo mysql_secure_installation -u root --password=${DB_PASS} --use-default
 
 	if [[ -d ${AC_CODE_DIR} ]]; then
 		echo -e
