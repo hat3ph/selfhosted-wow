@@ -11,7 +11,7 @@ cat << "EOF"
 https://www.azerothcore.org
 EOF
 
-function install
+function install(){
 	# set default env variable
 	AC_CODE_DIR="/opt/azerothcore-wotlk"
 	DB_USER="acore"
