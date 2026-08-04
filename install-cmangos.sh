@@ -17,23 +17,6 @@ cat << "EOF"
 EOF
 
 function install(){
-	# install dependencies
-	echo -e
-	echo "####################################"
-	echo "#...Install CMaNGOS dependencies...#"
-	echo "####################################"
-
-	sudo apt-get install -y git build-essential gcc g++ automake git-core autoconf make patch \
-		libmysql++-dev mysql-server libtool libssl-dev grep binutils zlib1g-dev libbz2-dev cmake \
-		libboost-all-dev libicu-dev screen unzip 7zip
-
-	# secure MySQL
-	echo -e
-	echo "###########################"
-	echo "#...Secure MySQL server...#"
-	echo "###########################"
-	sudo mysql_secure_installation --use-default
-
 	# set default env variable
 	CMGS_CODE_DIR="/opt/cmangos"
 	DB_USER="mangos"
@@ -63,6 +46,33 @@ function install(){
 		LOGS_DB="wotlklogs"
 		REALMLIST_NAME="CMaNGOS WotLK"
 	fi
+
+	# install dependencies
+	echo -e
+	echo "####################################"
+	echo "#...Install CMaNGOS dependencies...#"
+	echo "####################################"
+	sudo apt-get install -y git build-essential gcc g++ automake git-core autoconf make patch \
+		libtool libssl-dev grep binutils zlib1g-dev libbz2-dev cmake \
+		libboost-all-dev libicu-dev screen unzip 7zip
+	# install mysql server
+	if [[ $CODENAME == "trixie" ]]; then
+		sudo apt-get install -y gnupg
+		MYSQL_APT_CONFIG_VERSION="0.8.36-1"
+		wget -P /tmp https://dev.mysql.com/get/mysql-apt-config_${MYSQL_APT_CONFIG_VERSION}_all.deb
+		sudo DEBIAN_FRONTEND="noninteractive" dpkg -i /tmp/mysql-apt-config_${MYSQL_APT_CONFIG_VERSION}_all.deb
+		sudo apt-get update && sudo DEBIAN_FRONTEND="noninteractive" apt-get install -y libmysql++-dev mysql-server
+	else
+		sudo apt-get install -y libmysql++-dev mysql-server
+	fi
+
+	# secure MySQL
+	echo -e
+	echo "###########################"
+	echo "#...Secure MySQL server...#"
+	echo "###########################"
+	sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_PASS}';"
+	sudo mysql_secure_installation -u root --password=${DB_PASS} --use-default
 
 	if [[ -d ${CMGS_CODE_DIR} ]]; then
 		echo "Folder ${CMGS_CODE_DIR} already exist. Aborting installation!"
@@ -250,7 +260,7 @@ if [[ -r /etc/os-release ]]; then
 	CODENAME=$VERSION_CODENAME
 	#CODENAME=$(cat /etc/os-release | grep _CODENAME | cut -d = -f 2)
 	#echo $CODENAME
-	if [[ $CODENAME == "noble" || $CODENAME == "resolute" ]]; then
+	if [[ $CODENAME == "noble" || $CODENAME == "resolute" || $CODENAME == "trixie" ]]; then
 		if [[ -z $1 || $1 != "classic" && $1 != "tbc" && $1 != "wotlk" ]]; then
 			echo -e
 			echo "No or wrong arguments provided."
@@ -259,7 +269,7 @@ if [[ -r /etc/os-release ]]; then
 			install "$1"
 		fi
 	else
-		echo "Not running Ubuntu 24.04/26.04 LTS distribution. Exiting..."
+		echo "Not running Debian 13 or Ubuntu 24.04/26.04 LTS distribution. Exiting..."
 		exit;
 	fi
 else
