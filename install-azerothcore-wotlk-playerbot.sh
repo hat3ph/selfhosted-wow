@@ -22,7 +22,7 @@ function install(){
 	DB_PASS="P@ssw0rd123"
 	INSTALL_USER=$(whoami)
 	REALMLIST_IP=$(hostname -I | awk '{print $1}')
-	REALMLIST_NAME="AzerothCore PlayerBot"
+	REALMLIST_NAME="AzerothCore WotLK PlayerBot"
 
 	# install dependencies
 	echo -e
