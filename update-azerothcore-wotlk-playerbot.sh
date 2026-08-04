@@ -191,7 +191,7 @@ if [[ -r /etc/os-release ]]; then
         if [[ $CODENAME == "noble" || $CODENAME == "resolute" || $CODENAME == "trixie" ]]; then
                 check_update
         else
-                echo "Not running Ubuntu 24.04 LTS distribution. Exiting..."
+                echo "Not running Debian 13 or Ubuntu 24.04/26.04 LTS distribution. Exiting..."
                 exit;
         fi
 else
