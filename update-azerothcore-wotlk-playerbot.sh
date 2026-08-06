@@ -105,16 +105,18 @@ function update(){
 	echo "###################################"
 	echo "#...Checking latest client data...#"
 	echo "###################################"
-	LATEST_CLIENT=$(curl -s https://api.github.com/repos/wowgaming/client-data/releases/latest 2>/dev/null | \
-		grep '"tag_name"' | cut -d'"' -f4 || echo "unknown")
+	# get AzerothCore's required client data version
+	MMAP_VERSION=$(grep -E '#define\s+MMAP_VERSION' ${AC_CODE_DIR}/src/common/Collision/Maps/MapDefines.h | awk '{print $3}')
 	CURRENT_CLIENT=$(cat ${AC_CODE_DIR}/data/.version 2>/dev/null || echo "unknown")
-	if [ "${CURRENT_CLIENT}" = "${LATEST_CLIENT}" ] && [ "${CURRENT_CLIENT}" != "unknown" ]; then
-		echo "Client data is up to date"
+	if [ "${CURRENT_CLIENT}" = "${MMAP_VERSION}" ] && [ "${CURRENT_CLIENT}" != "unknown" ]; then
+		echo "Client data is up to date according to AzerothCore's source code."
 	else
-		wget -q --show-progress https://github.com/wowgaming/client-data/releases/download/${LATEST_CLIENT}/Data.zip -P /tmp
+		CLIENT_URL=$(curl -s https://api.github.com/repos/wowgaming/client-data/releases 2>/dev/null | grep v${MMAP_VERSION} | \
+			grep '"browser_download_url"' | cut -d'"' -f4 || echo "unknown")
+		wget -q --show-progress ${CLIENT_URL} -P /tmp
 		unzip -o /tmp/Data.zip -d ${AC_CODE_DIR}/data
-		echo "${LATEST_CLIENT}" > ${AC_CODE_DIR}/data/.version
-		echo "Done update client data to version ${LATEST_CLIENT}."
+		echo "${MMAP_VERSION}" > ${AC_CODE_DIR}/data/.version
+		echo "Done update client data to version ${MMAP_VERSION}."
 	fi
 
 	echo -e
