@@ -64,15 +64,17 @@ function install(){
 
 		# download client data
 		echo -e
-		echo "###################################"
-		echo "#...Download latest client data...#"
-		echo "###################################"
-		LATEST_CLIENT=$(curl -s https://api.github.com/repos/wowgaming/client-data/releases/latest 2>/dev/null | \
-			grep '"tag_name"' | cut -d'"' -f4 || echo "unknown")
-		wget -q --show-progress https://github.com/wowgaming/client-data/releases/download/${LATEST_CLIENT}/Data.zip -P /tmp
+		echo "#####################################"
+		echo "#...Download required client data...#"
+		echo "#####################################"
+		# get AzerothCore's required client data version
+		MMAP_VERSION=$(grep -E '#define\s+MMAP_VERSION' ${AC_CODE_DIR}/src/common/Collision/Maps/MapDefines.h | awk '{print $3}')
+		CLIENT_URL=$(curl -s https://api.github.com/repos/wowgaming/client-data/releases 2>/dev/null | \
+			grep v${MMAP_VERSION} | grep '"browser_download_url"' | cut -d'"' -f4 || echo "unknown")
+		wget -q --show-progress ${CLIENT_URL} -P /tmp
 		unzip /tmp/Data.zip -d ${AC_CODE_DIR}/data
-		echo "${LATEST_CLIENT}" > ${AC_CODE_DIR}/data/.version
-		echo "Done extract client data to ${AC_CODE_DIR}/data."
+		echo "${MMAP_VERSION}" > ${AC_CODE_DIR}/data/.version
+		echo "Done extract client data v${MMAP_VERSION} to ${AC_CODE_DIR}/data."
 
 		if [[ $CODENAME == "resolute" ]]; then
 			# fix compile error missing libstdc++ library on Ubuntu 26.04 LTS
