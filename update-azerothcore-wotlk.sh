@@ -155,6 +155,15 @@ function update(){
 	sudo systemctl start ac-authserver
 	sudo systemctl start ac-worldserver
 	echo "Done started AzerothCore service."
+
+	# remove build directory
+	echo -e
+	echo "########################"
+	echo "#...Cleanup old data...#"
+	echo "########################"
+	sudo rm -r ${AC_CODE_DIR}/build
+	sudo rm /tmp/Data.zip
+	echo "Done removing old data."
 }
 
 # check runing OS
