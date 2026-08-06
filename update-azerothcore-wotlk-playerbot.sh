@@ -72,6 +72,7 @@ function update(){
 	echo "###############################"
 	echo "#...Backup AzerothCore Data...#"
 	echo "###############################"
+	echo "Backup data in progress..."
 	mkdir -p ${AC_CODE_DIR}/backup
 	sudo mysqldump acore_world > ${AC_CODE_DIR}/backup/acore_world-$(date +%Y_%m_%d_%H_%M_%S).sql
 	sudo mysqldump acore_characters > ${AC_CODE_DIR}/backup/acore_characters-$(date +%Y_%m_%d_%H_%M_%S).sql
@@ -101,9 +102,9 @@ function update(){
 	git pull origin master
 
 	echo -e
-	echo "######################################"
-	echo "#...Checking latesting client data...#"
-	echo "######################################"
+	echo "###################################"
+	echo "#...Checking latest client data...#"
+	echo "###################################"
 	LATEST_CLIENT=$(curl -s https://api.github.com/repos/wowgaming/client-data/releases/latest 2>/dev/null | \
 		grep '"tag_name"' | cut -d'"' -f4 || echo "unknown")
 	CURRENT_CLIENT=$(cat ${AC_CODE_DIR}/data/.version 2>/dev/null || echo "unknown")
@@ -111,7 +112,7 @@ function update(){
 		echo "Client data is up to date"
 	else
 		wget -q --show-progress https://github.com/wowgaming/client-data/releases/download/${LATEST_CLIENT}/Data.zip -P /tmp
-		unzip /tmp/Data.zip -d ${AC_CODE_DIR}/data
+		unzip -o /tmp/Data.zip -d ${AC_CODE_DIR}/data
 		echo "${LATEST_CLIENT}" > ${AC_CODE_DIR}/data/.version
 		echo "Done update client data to version ${LATEST_CLIENT}."
 	fi
