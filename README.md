@@ -28,6 +28,16 @@ To update Azerothcore's run the update script accordingly.
 ./update-azerothcore-wotlk.sh
 ./update-azerothcore-wotlk-playerbot.sh
 ```
+To access the world server, use screen utility to access the session.
+```
+# https://linuxize.com/post/how-to-use-linux-screen/
+# list available terminal session
+screen -ls
+# access the worldserver session
+screen -r worldserver
+# detach the screen session
+ctrl+a+d
+```
 ## CMaNGOS (https://github.com/cmangos/issues/wiki/Installation-Instructions)
 You can choose to install CMaNGOS Classic/TBC/WotLK WoW server.
 ```
@@ -59,3 +69,24 @@ REALMLIST_IP=$(hostname -I | awk '{print $1}')
 To enable AI Playerbot and Auction House in CMaNGOS, change variable `PLAYERBOTS` and `AHBOT` to `ON` before installation.
 
 To update CMaNGOS, run `update-cmangos.sh` script. Ensure the env variable on the update script is correct before proceed.
+
+To access the world server, use screen utility to access the session.
+```
+# https://linuxize.com/post/how-to-use-linux-screen/
+# list available terminal session
+screen -ls
+# access the worldserver session
+screen -r mangosd
+# detach the screen session
+ctrl+a+d
+```
+## Player account command
+Access the world server session and run below command:
+```
+# create user account
+account create playername password
+# grant GM access to player
+account set gmlevel playername 3 -1
+# change player password
+account set password playername newpassword newpassword
+```
